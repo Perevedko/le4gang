@@ -4,8 +4,9 @@ if [ -z "${STEAM_GROUP_ID}" ]; then
         echo 'Please set $STEAM_GROUP_ID'
 fi
 
-sed -i -e 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config
-systemctl restart sshd
+grep -oE "^#PasswordAuthentication yes" /etc/ssh/sshd_config \
+  && sed -i -e 's/#PasswordAuthentication yes/PasswordAuthentication no/g' /etc/ssh/sshd_config \
+  && systemctl restart sshd
 
 apt remove $(dpkg --get-selections docker.io docker-compose docker-doc podman-docker containerd runc | cut -f1)
 
@@ -27,7 +28,12 @@ EOF
 
 apt update
 apt upgrade -y
-apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+apt install -y docker-ce \
+  docker-ce-cli \
+  containerd.io \
+  docker-buildx-plugin \
+  docker-compose-plugin
+
 docker pull left4devops/l4d2
 
 if [ -z "${STEAM_GROUP_ID}" ]; then
@@ -56,21 +62,4 @@ docker run \
 	-e GAME_TYPES=versus \
 	-e RCON_PASSWORD=$PASSWORD \
 	left4devops/l4d2 2>/dev/null | grep Network
-
-#NAME=BRATLAND
-#PASSWORD=bratland
-#DEAD_CENTER_1=c1m1_hotel
-EUROPE_REGION=3
-#docker run \
-#        --name l4d2 \
-#        --network host \
-#        --restart unless-stopped \
-#        -e HOSTNAME=$NAME \
-#        -e MOTD=1 \
-#        -e MOTD_CONTENT="НА ЭТОМ СЕРВЕРЕ ДАЮТ ПИЗДЫ И НЕ СТАВЯТ В ХУЙ" \
-#        -e REGION=$EUROPE_REGION \
-#        -e DEFAULT_MODE=versus \
-#        -e GAME_TYPES=versus \
-#        -e RCON_PASSWORD=$PASSWORD \
-#        left4devops/l4d2 2>/dev/null | grep Network
 

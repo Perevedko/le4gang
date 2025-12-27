@@ -43,23 +43,26 @@ fi
 
 NAME="BRATLAND"
 PASSWORD="bratland"
-DEAD_CENTER_1="c1m1_hotel"
+DEFAULT_MAP="c14m1_junkyard"
 EUROPE_REGION="3"
 MOTD_CONTENT="НА ЭТОМ СЕРВЕРЕ ДАЮТ ПИЗДЫ И НЕ СТАВЯТ В ХУЙ"
+BANDWITH_ARGS="+sv_minrate 5000 +sv_maxrate 25000 +sv_mincmdrate 10 +sv_maxcmdrate 33"
+EXTRA_ARGS="$BANDWITH_ARGS"
 
 docker run \
         --name l4d2 \
 	--network host \
 	--restart unless-stopped \
 	-e HOSTNAME="$NAME" \
-	-e DEFAULT_MAP="$DEAD_CENTER_1" \
+	-e DEFAULT_MAP="$DEFAULT_MAP" \
 	-e MOTD=1 \
 	-e MOTD_CONTENT="$MOTD_CONTENT" \
 	-e STEAM_GROUP="$STEAM_GROUP_ID" \
 	-e STEAM_GROUP_EXCLUSIVE=true \
-	-e REGION=$EUROPE_REGION \
+	-e REGION="$EUROPE_REGION" \
 	-e DEFAULT_MODE=versus \
 	-e GAME_TYPES=versus \
-	-e RCON_PASSWORD=$PASSWORD \
+	-e RCON_PASSWORD="$PASSWORD" \
+	-e EXTRA_ARGS="$EXTRA_ARGS" \
 	left4devops/l4d2 2>/dev/null | grep Network
 

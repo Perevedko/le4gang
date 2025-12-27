@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  l4d2:
+    image: left4devops/l4d2
+    container_name: l4d2
+    # Network host is required for the game server to handle UDP ports correctly
+    network_mode: host
+    restart: unless-stopped
+    environment:
+      - HOSTNAME=BRATLAND
+      - DEFAULT_MAP=c14m1_junkyard
+      - MOTD=1
+      - MOTD_CONTENT=НА ЭТОМ СЕРВЕРЕ ДАЮТ ПИЗДЫ И НЕ СТАВЯТ В ХУЙ
+      - STEAM_GROUP=YOUR_ID_HERE
+      - STEAM_GROUP_EXCLUSIVE=true
+      - REGION=3
+      - DEFAULT_MODE=versus
+      - GAME_TYPES=versus
+      - RCON_PASSWORD=bratland
+      - EXTRA_ARGS="+sv_minrate 5000 +sv_maxrate 25000 +sv_mincmdrate 10 +sv_maxcmdrate 33"
+
